@@ -1,0 +1,84 @@
+body {
+    background: #f7f9fb;
+    
+}
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 1rem;
+    background: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 40rem;
+    border-radius: 15px;
+}
+.page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem;
+}
+.blueDiv {
+    background: #0a3ebd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem;
+    width: 950px;
+    height: 600px;
+    border-radius: 20px;
+    color: #fff;
+}
+.formPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem;
+}
+.formPage input {
+   background: #f7f9fb;
+   border: none;
+   width: 18rem;
+   padding: 0.28rem;
+   border-radius: 5px;
+
+}
+button img {
+    width: 20px;
+    height: 20px;
+}
+.blueDiv img {
+    min-width: 150px;
+    height: 150px;
+    opacity: 0.4;
+    transition: all 0.3s ease-in;
+}
+.blueDiv img:hover {
+    opacity: 1;
+}
+
+
+
+@media (max-width: 768px) {
+    .main {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 1rem;
+    }
+    .blueDiv {
+        height: 400px;
+        margin-bottom: 10px;
+    }
+    .page {
+       
+    }
+}

@@ -1,0 +1,225 @@
+
+body {
+    background-color: #403d3d;
+}
+
+.bgColor {
+    background-color: #403d3d;
+}
+
+
+
+@keyframes hue {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    15% {
+        filter: hue-rotate(60deg);
+    }
+    30% {
+        filter: hue-rotate(120deg);
+    }
+    45% {
+        filter: hue-rotate(180deg);
+    }
+    60% {
+        filter: hue-rotate(240deg);
+    }
+    75% {
+        filter: hue-rotate(300deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes invert {
+    0% {
+        filter: invert(0%);
+    }
+    20% {
+        filter: invert(50%);
+    }
+    40% {
+        filter: invert(100%);
+    }
+    60% {
+        filter: invert(100%);
+    }
+    80% {
+        filter: invert(50%);
+    }
+    100% {
+        filter: invert(0%);
+    }
+    
+}
+
+
+
+footer {
+    position: fixed;
+    bottom: 0;
+    color: white;
+    width: 100vw;
+    min-height: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    /* From https://css.glass */
+
+   
+}
+
+.button {
+    background: transparent;
+    text-decoration: none;
+    border: none;
+    color: #fff;
+}
+
+.post div img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+
+}
+.body input {
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    outline: none;
+    color: #fff;
+}
+
+.menu {
+    position: absolute;
+    top: -20%;
+    left: 95%;
+    font-size: 22px;
+    cursor: pointer;
+    transform: translate(20%, -350%);
+}
+.menu {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+
+
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    list-style: none;
+    padding: 0;
+    margin: 2rem;
+    top: 50%;
+    right: 50%;
+    transition: all 0.3s ease-in-out;
+}
+
+
+
+/* Show the dropdown menu on button hover or click */
+.menu:hover .dropdown-menu,
+.menu .button:focus + .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    text-decoration: none;
+    display: block;
+    color: black;
+    
+}
+
+.dropdown-item:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.postBtn {
+    position: absolute;
+    top: 70%;
+    left: 2%;
+}
+
+@media (max-width: 768px) {
+    .postBtn {
+        position: absolute;
+        top: 75%;
+        left: 2%;
+    }
+}
+.post-body {
+    padding-top: 10px;
+    font-size: 15px;
+}
+.likes {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.container-sm {
+    
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.post {
+    border-bottom: 1px solid #767171;
+}
+
+
+.profile {
+    width: 100vw;
+    min-height: 100vh;
+    color: #fff;
+}
+.comment {
+    color: #000
+}
+.cmtSection {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    gap: 15px;
+    padding: 1rem;
+}
+.cmtSection div {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+    padding: 1rem;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px; /* Adjust the height as needed */
+}
+
+nav img {
+    width: 6rem;
+    height: 6rem;
+    animation: invert 5s infinite ease-in ;
+}
