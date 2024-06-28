@@ -4,7 +4,8 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router';
 import logo from '../assets/logo.png';
 import './profile.css';
-import { collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, updateDoc, doc, arrayUnion, increment } from 'firebase/firestore';
+import '../index.css'
+import { collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, updateDoc, doc, arrayUnion, increment, where } from 'firebase/firestore';
 import {
     Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
 } from '@chakra-ui/react';
@@ -21,7 +22,8 @@ function Profile() {
     const [posts, setPosts] = useState([]);
     const [UID, setUID] = useState();
     const [comment, setComment] = useState('');
-    const [activePost, setActivePost] = useState(null); // Track the active post for comments
+    const [activePost, setActivePost] = useState(null); 
+    const [userPost, setUserPost] = useState([])
 
     // Chakra UI
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -59,6 +61,9 @@ function Profile() {
                     theme: "light"
                     });
             }
+            else {
+                navigate('/')
+            }
         });
 
         return () => unsubscribe();
@@ -88,7 +93,7 @@ function Profile() {
                 comments: [] // initialize comments array
             });
             if (postRef) {
-                console.log(postRef);
+                
                 setText('');
                 toast.success('Post created', {
                     position: "top-right",
@@ -113,7 +118,8 @@ function Profile() {
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const postsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
             setPosts(postsData);
-            console.log(postsData);
+           
+            
         });
 
         return () => unsubscribe();
@@ -170,18 +176,89 @@ function Profile() {
         onOpen();
     };
 
+
+
+    // User's Posts
+    useEffect(() => {
+        if (!user) return;
+        const postCollection = collection(db, 'posts');
+        const q = query(postCollection, where('uid', '==', user.uid), orderBy('timestamp'));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const userPostsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setUserPost(userPostsData);
+           
+        });
+
+        return () => unsubscribe();
+    }, [user]);
+
     return (
         <>
             {user ? (
                 <div className='profile bg-dark '>
                     <nav className='text-center'><img src={logo} alt="Logo" /></nav>
-
+                   {/* off canvas  */}
                     <div className="offcanvas offcanvas-end bgColor text-white" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                         <div className="offcanvas-header">
                             <h5 className="offcanvas-title" id="offcanvasRightLabel"> &nbsp; {user.displayName}</h5>
                             <button type="button" className="btn-close " data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div className="offcanvas-body">
+
+                         {/* Users Post */}
+<h2>Posts</h2>
+<div className='container userPost rounded-3'>
+    {
+        userPost.length > 0 ? (
+            <div className='row'>
+                {userPost.map((post, index) => (
+                    <div key={index} className='card mb-3'>
+                        <div className='card-header d-flex align-items-center'>
+                            <img src={post.photoURL} alt={post.displayName} style={{ width: '50px', borderRadius: '50%', marginRight: '15px' }} />
+                            <h5 className='mb-0'>{post.displayName}</h5>
+                        </div>
+                        <div className='card-body'>
+                            <p className='card-text'>{post.text}</p>
+                            <div className='d-flex justify-content-between'>
+                                <span>
+                                    <i className="fa-solid fa-heart"></i> {post.likesCount} Likes
+                                </span>
+                                <span>
+                                <a className="btn btn-primary rounded-pill" data-bs-toggle="collapse" href={`#collapseExample${index}`} role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <i className="fa-regular fa-comment" data-bs-toggle='collapse'></i> {post.commentsCount} Comments</a>
+                                   
+                                </span>
+                            </div>
+                        </div>
+
+                     <div className='collpase' id={`collapseExample${index}`}>
+                        {post.comments.length > 0 && (
+                            <ul className='list-group list-group-flush'>
+                                {post.comments.map((comment, idx) => (
+                                    <li key={idx} className='list-group-item d-flex align-items-center'>
+                                        <img src={comment.photo} alt={comment.name} style={{ width: '30px', borderRadius: '50%', marginRight: '10px' }} />
+                                        <strong>{comment.name}:</strong> <span className='ms-2'>{comment.comment}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                        </div>
+
+
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <span>No Posts</span>
+        )
+    }
+</div>
+
+
+                            
+
+
                             <button className='btn btn-secondary' onClick={logout}> Log Out</button>
                         </div>
                     </div>
@@ -254,7 +331,7 @@ function Profile() {
                                                     {post.likesCount} &nbsp;
                                                     <i
                                                         onClick={() => handleLike(post.id, post.likedBy || [])}
-                                                        className={`fa-regular fa-heart ${post.likedBy?.some(like => like.uid === user.uid) ? 'disabled' : ''}`}
+                                                        className={`fa-regular fa-heart ${post.likedBy?.some(like => like.uid === user.uid) ? 'disabled fa-solid red' : ''}`}
                                                         style={{ cursor: post.likedBy?.some(like => like.uid === user.uid) ? 'not-allowed' : 'pointer' }}
                                                     ></i>
                                                 </p>
@@ -305,7 +382,7 @@ function Profile() {
                     <ToastContainer />
                 </div>
             ) : (
-                <span>Loading...</span>
+                <div className='loader'></div>
             )}
         </>
     );

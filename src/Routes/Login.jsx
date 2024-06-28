@@ -41,7 +41,7 @@ async function login() {
     try {
         const res = await signInWithEmailAndPassword(auth, email, password)
         if (res) {
-            console.log(res)
+           
             navigate('/profile')
 
             toast.success('Login Succesfully 😍', {

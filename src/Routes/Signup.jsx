@@ -24,7 +24,7 @@ function Signup() {
         try {
             const res = await signInWithPopup(auth, provider)
             if (res) {
-                console.log(res.user)
+                
                 navigate('/profile')
                 
             toast.success(`${res.user.displayName} Signup Succesfully 😍`, {

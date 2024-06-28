@@ -22,6 +22,8 @@ body {
     justify-content: center;
     flex-direction: column;
     padding: 1rem;
+
+   
 }
 .blueDiv {
     background: #0a3ebd;
@@ -73,12 +75,19 @@ button img {
         justify-content: center;
         min-height: 100vh;
         padding: 1rem;
+        width: 100vw;
     }
     .blueDiv {
         height: 400px;
         margin-bottom: 10px;
     }
     .page {
-       
+        width: 100%;
     }
+}
+
+
+.offcanvas-end {
+    width: 100% !important;
+    margin: 0;
 }

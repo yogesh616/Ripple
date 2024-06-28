@@ -8,7 +8,7 @@ function App() {
   useEffect(()=> {
     const authorize = onAuthStateChanged(auth, (user)=> {
       if (user) {
-        console.log(user)
+       
         navigate('/profile')
 
       }
