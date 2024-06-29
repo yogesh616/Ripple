@@ -3,9 +3,10 @@ import { auth, db } from '../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router';
 import logo from '../assets/logo.png';
+import avatar from '../assets/user.png';
 import './profile.css';
 import '../index.css'
-import { collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, updateDoc, doc, arrayUnion, increment, where } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, updateDoc, doc, arrayUnion, increment, where, setDoc, getDoc } from 'firebase/firestore';
 import {
     Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
 } from '@chakra-ui/react';
@@ -15,15 +16,18 @@ import EmojiPicker from 'emoji-picker-react';
 import { ToastContainer, toast } from 'react-toastify';
 
 
+
 function Profile() {
     const navigate = useNavigate();
+    
     const [user, setUser] = useState(null);
     const [text, setText] = useState('');
     const [posts, setPosts] = useState([]);
     const [UID, setUID] = useState();
     const [comment, setComment] = useState('');
     const [activePost, setActivePost] = useState(null); 
-    const [userPost, setUserPost] = useState([])
+    const [userPost, setUserPost] = useState([]);
+   
 
     // Chakra UI
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -44,7 +48,7 @@ function Profile() {
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUser(user);
                 
@@ -60,6 +64,27 @@ function Profile() {
                     progress: undefined,
                     theme: "light"
                     });
+                    
+                    try {
+                        const userRef = doc(db, 'users', user.uid);
+                        const userSnap = await getDoc(userRef);
+                        if (userSnap.exists()) {
+                            console.log(userSnap.data());
+                        }
+              
+                        if (!userSnap.exists()) {
+                          await setDoc(userRef, {
+                            uid: user.uid,
+                            displayName: user.displayName,
+                            email: user.email,
+                            photoURL: user.photoURL
+                          });
+                          console.log('User added successfully')
+                          
+                        }
+                      } catch (error) {
+                        console.log('Error adding user', error);
+                      }
             }
             else {
                 navigate('/')
@@ -68,6 +93,13 @@ function Profile() {
 
         return () => unsubscribe();
     }, []);
+
+
+
+
+
+
+
 
     const logout = async () => {
         try {
@@ -118,6 +150,9 @@ function Profile() {
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const postsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
             setPosts(postsData);
+            
+           
+            
            
             
         });
@@ -193,6 +228,8 @@ function Profile() {
         return () => unsubscribe();
     }, [user]);
 
+   
+
     return (
         <>
             {user ? (
@@ -222,7 +259,7 @@ function Profile() {
                             <p className='card-text'>{post.text}</p>
                             <div className='d-flex justify-content-between'>
                                 <span>
-                                    <i className="fa-solid fa-heart"></i> {post.likesCount} Likes
+                                    <i className="fa-solid fa-heart red"></i> {post.likesCount} Likes
                                 </span>
                                 <span>
                                 <a className="btn btn-primary rounded-pill" data-bs-toggle="collapse" href={`#collapseExample${index}`} role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -322,8 +359,8 @@ function Profile() {
                             <div className='container-sm'>
                                 {posts.map((post) => (
                                     <div key={post.id} className='post'>
-                                        <div><img style={imgStyle} src={post.photoURL} alt={post.displayName} /></div>
-                                        <div className='post-body'>
+                                        <div   ><img style={imgStyle} src={post.photoURL} alt={post.displayName} /></div>
+                                        <div  className='post-body'>
                                             <h5 style={{ fontSize: '18px' }}>{post.displayName}</h5>
                                             <p>{post.text}</p>
                                             <div className='likes'>

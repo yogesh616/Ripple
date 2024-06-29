@@ -6,21 +6,24 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Signup from './Routes/Signup.jsx'
 import Profile from './Routes/Profile.jsx'
 import 'react-toastify/dist/ReactToastify.css'
-import User from './Routes/User.jsx'
+import Chat from './Routes/Chat.jsx'
+
 
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
-    
+
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<App />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/user" element={<User />} />
+            <Route path="/chat" element={<Chat />} />
+           
         </Routes>
     </BrowserRouter>
+  
   
   
 )
