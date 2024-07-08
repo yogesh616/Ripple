@@ -6,7 +6,7 @@ import logo from '../assets/logo.png';
 import avatar from '../assets/user.png';
 import './profile.css';
 import '../index.css'
-import { collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, updateDoc, doc, arrayUnion, increment, where, setDoc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, updateDoc, doc, arrayUnion, increment, where, setDoc, getDoc, getDocs } from 'firebase/firestore';
 import {
     Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
 } from '@chakra-ui/react';
@@ -14,6 +14,10 @@ import { useDisclosure } from '@chakra-ui/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import EmojiPicker from 'emoji-picker-react';
 import { ToastContainer, toast } from 'react-toastify';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebase';
+import ReactAudioPlayer from 'react-audio-player';
+
 
 
 
@@ -27,6 +31,11 @@ function Profile() {
     const [comment, setComment] = useState('');
     const [activePost, setActivePost] = useState(null); 
     const [userPost, setUserPost] = useState([]);
+    const [userList, setUserList] = useState([]);
+    const [file, setFile] = useState(null);
+    const [progress, setProgress] = useState(0);
+    const [downloadURL, setDownloadURL] = useState('');
+  
    
 
     // Chakra UI
@@ -45,6 +54,11 @@ function Profile() {
     const bgColor = {
         background: '#403d3d',
         color: '#fff'
+    };
+    const postImgStyle = {
+        minWidth: '80px',
+        minHeight: '40px',
+        borderRadius: '10px',
     };
 
     useEffect(() => {
@@ -68,9 +82,15 @@ function Profile() {
                     try {
                         const userRef = doc(db, 'users', user.uid);
                         const userSnap = await getDoc(userRef);
-                        if (userSnap.exists()) {
-                            console.log(userSnap.data());
-                        }
+                        const usersSnapshot = await getDocs(collection(db, 'users'));
+                
+                if (!usersSnapshot.empty) {
+                    const userList = usersSnapshot.docs.map(doc => doc.data());
+                    console.log(userList)
+
+                    setUserList(userList);
+                }
+
               
                         if (!userSnap.exists()) {
                           await setDoc(userRef, {
@@ -112,6 +132,7 @@ function Profile() {
 
     const createPost = async () => {
         try {
+           const postImageUrl = await handleUpload();
             const timestamp = serverTimestamp();
             const postRef = await addDoc(collection(db, 'posts'), {
                 uid: user.uid,
@@ -122,7 +143,8 @@ function Profile() {
                 likesCount: 0,
                 commentsCount: 0,
                 likedBy: [], // initialize likedBy array
-                comments: [] // initialize comments array
+                comments: [],
+                postImg: postImageUrl // initialize comments array
             });
             if (postRef) {
                 
@@ -228,6 +250,66 @@ function Profile() {
         return () => unsubscribe();
     }, [user]);
 
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+      };
+    
+      const handleUpload = async () => {
+        if (file) {
+            const storageRef = ref(storage, `uploads/${file.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+    
+            return new Promise((resolve, reject) => {
+                uploadTask.on(
+                    'state_changed',
+                    (snapshot) => {
+                        const progress = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                        setProgress(progress);
+                        console.log('Upload is ' + progress + '% done');
+                        if (progress === 100) {
+                            console.log('Upload completed!');
+                            toast.success('image uploaded', {
+                                position: "top-right",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light"
+                                });
+                        }
+                    },
+                    (error) => {
+                        console.error('Upload failed:', error);
+                        reject(error);
+                    },
+                    async () => {
+                        try {
+                            const url = await getDownloadURL(uploadTask.snapshot.ref);
+                            setDownloadURL(url);
+                            resolve(url);
+                        } catch (error) {
+                            console.error('Error getting download URL:', error);
+                            reject(error);
+                        }
+                    }
+                );
+            });
+        } else {
+            console.error('No file selected');
+            throw new Error('No file selected');
+        }
+    };
+    
+ const isMp3Url = (url) => {
+    const regex = /\.mp3(?:\?|$)/;
+    return regex.test(url);
+ }
+
+   
+   
    
 
     return (
@@ -235,6 +317,15 @@ function Profile() {
             {user ? (
                 <div className='profile bg-dark '>
                     <nav className='text-center'><img src={logo} alt="Logo" /></nav>
+
+                    
+                   
+                   
+
+
+
+
+
                    {/* off canvas  */}
                     <div className="offcanvas offcanvas-end bgColor text-white" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                         <div className="offcanvas-header">
@@ -250,12 +341,12 @@ function Profile() {
         userPost.length > 0 ? (
             <div className='row'>
                 {userPost.map((post, index) => (
-                    <div key={index} className='card mb-3'>
+                    <div key={index} className='card mb-3 '  style={{background: '#212529', color: '#fff'}}> 
                         <div className='card-header d-flex align-items-center'>
                             <img src={post.photoURL} alt={post.displayName} style={{ width: '50px', borderRadius: '50%', marginRight: '15px' }} />
                             <h5 className='mb-0'>{post.displayName}</h5>
                         </div>
-                        <div className='card-body'>
+                        <div className='card-body ' >
                             <p className='card-text'>{post.text}</p>
                             <div className='d-flex justify-content-between'>
                                 <span>
@@ -269,11 +360,11 @@ function Profile() {
                             </div>
                         </div>
 
-                     <div className='collpase' id={`collapseExample${index}`}>
+                     <div className='collpase' id={`collapseExample${index}`} >
                         {post.comments.length > 0 && (
-                            <ul className='list-group list-group-flush'>
+                            <ul className='list-group list-group-flush  ' >
                                 {post.comments.map((comment, idx) => (
-                                    <li key={idx} className='list-group-item d-flex align-items-center'>
+                                    <li key={idx} className='list-group-item d-flex align-items-center' style={{background: '#212529', color: '#fff', border: '0'}}>
                                         <img src={comment.photo} alt={comment.name} style={{ width: '30px', borderRadius: '50%', marginRight: '10px' }} />
                                         <strong>{comment.name}:</strong> <span className='ms-2'>{comment.comment}</span>
                                     </li>
@@ -299,6 +390,9 @@ function Profile() {
                             <button className='btn btn-secondary' onClick={logout}> Log Out</button>
                         </div>
                     </div>
+
+
+
 
                     <footer className=''>
                         <i className="fa-solid fa-house"></i>
@@ -327,7 +421,9 @@ function Profile() {
                             <h5 className="offcanvas-title text-center" id="offcanvasTopLabel">New Ripple</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
-                        <div className="offcanvas-body position-relative">
+
+                        { /*  create post */}
+                        <div className="offcanvas-body position-relative container-fluid">
                             <div className='post'>
                                 <div><img src={user.photoURL} alt={user.displayName} /></div>
                                 <div className='body'>
@@ -337,7 +433,9 @@ function Profile() {
                                         value={text}
                                         placeholder='Start a ripple...'
                                         onChange={(e) => setText(e.target.value)}
+                                        
                                     />
+                                    <input type='file' onChange={handleFileChange} />
                                 </div>
 
                                 {text && (
@@ -356,13 +454,23 @@ function Profile() {
                     <ChakraProvider>
                         {/* Post Field */}
                         {posts ? (
-                            <div className='container-sm'>
+                            <div className='container'>
                                 {posts.map((post) => (
-                                    <div key={post.id} className='post'>
+                                    <div key={post.id} className='post mb-4'>
                                         <div   ><img style={imgStyle} src={post.photoURL} alt={post.displayName} /></div>
                                         <div  className='post-body'>
                                             <h5 style={{ fontSize: '18px' }}>{post.displayName}</h5>
                                             <p>{post.text}</p>
+    {/*  add image and audio*/}            {post.postImg && (isMp3Url(post.postImg) ? 
+                                         (<audio controls>
+                                            <source src={post.postImg} />
+                                         </audio>) : (<img src={post.postImg} />)
+    
+)}
+
+
+
+
                                             <div className='likes'>
                                                 <p className=''>
                                                     {post.likesCount} &nbsp;

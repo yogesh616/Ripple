@@ -7,6 +7,7 @@ import Signup from './Routes/Signup.jsx'
 import Profile from './Routes/Profile.jsx'
 import 'react-toastify/dist/ReactToastify.css'
 import Chat from './Routes/Chat.jsx'
+import Upload from './Routes/Upload.jsx'
 
 
 
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path="/signup" element={<Signup />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path='/upload' element={<Upload />} />
            
         </Routes>
     </BrowserRouter>

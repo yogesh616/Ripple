@@ -78,12 +78,7 @@ footer {
     color: #fff;
 }
 
-.post div img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-}
+
 
 .post {
     display: flex;
@@ -222,4 +217,19 @@ nav img {
     width: 6rem;
     height: 6rem;
     animation: invert 5s infinite ease-in ;
+}
+
+.postImg {
+    width: 80px;
+    height: 80px;
+    border-radius: 10%;
+    object-fit: cover;
+}
+
+.post-body img {
+    min-width: 180px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+    
 }
