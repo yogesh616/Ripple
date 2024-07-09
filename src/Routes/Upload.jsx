@@ -22,6 +22,15 @@ function Upload() {
     checkFile();
   }, []);
 
+useEffect(()=> {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  alert(`width="${w}px" height="${h}"`)
+}, [])
+
+
+
+
   return (
     <div>
       <h1>Check MP3 File</h1>

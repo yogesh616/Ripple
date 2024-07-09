@@ -1,7 +1,7 @@
 body {
     background: #f7f9fb;
-    
 }
+
 .main {
     display: flex;
     align-items: center;
@@ -16,15 +16,15 @@ body {
     min-height: 40rem;
     border-radius: 15px;
 }
+
 .page {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     padding: 1rem;
-
-   
 }
+
 .blueDiv {
     background: #0a3ebd;
     display: flex;
@@ -37,6 +37,7 @@ body {
     border-radius: 20px;
     color: #fff;
 }
+
 .formPage {
     display: flex;
     align-items: center;
@@ -44,30 +45,32 @@ body {
     flex-direction: column;
     padding: 1rem;
 }
+
 .formPage input {
    background: #f7f9fb;
    border: none;
    width: 18rem;
    padding: 0.28rem;
    border-radius: 5px;
-
 }
+
 button img {
     width: 20px;
     height: 20px;
 }
+
 .blueDiv img {
     min-width: 150px;
     height: 150px;
     opacity: 0.4;
     transition: all 0.3s ease-in;
 }
+
 .blueDiv img:hover {
     opacity: 1;
 }
 
-
-
+/* Media queries for responsiveness */
 @media (max-width: 768px) {
     .main {
         flex-direction: column;
@@ -76,16 +79,34 @@ button img {
         min-height: 100vh;
         padding: 1rem;
         width: 100vw;
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
     }
     .blueDiv {
-        height: 400px;
+        width: 100%;
+        height: auto;
         margin-bottom: 10px;
     }
     .page {
         width: 100%;
     }
+    .formPage input {
+        width: 100%;
+    }
 }
 
+@media (max-width: 480px) {
+    .blueDiv {
+        padding: 0.5rem;
+        border-radius: 10px;
+    }
+    .blueDiv img {
+        width: 100px;
+        height: 100px;
+    }
+}
 
 .offcanvas-end {
     width: 100% !important;

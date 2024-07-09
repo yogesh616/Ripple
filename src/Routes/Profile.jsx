@@ -55,11 +55,15 @@ function Profile() {
         background: '#403d3d',
         color: '#fff'
     };
-    const postImgStyle = {
-        minWidth: '80px',
-        minHeight: '40px',
-        borderRadius: '10px',
-    };
+    const postPhotoStyle = {
+        borderRadius: '15px',
+        maxWidth: '10rem',
+        padding: '0.25rem',
+        objectFit: 'cover',
+        };
+        
+        
+    
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -315,220 +319,193 @@ function Profile() {
     return (
         <>
             {user ? (
-                <div className='profile bg-dark '>
-                    <nav className='text-center'><img src={logo} alt="Logo" /></nav>
+    <div className="profile bg-dark">
+        <nav className="text-center">
+            <img src={logo} alt="Logo" />
+        </nav>
 
-                    
-                   
-                   
-
-
-
-
-
-                   {/* off canvas  */}
-                    <div className="offcanvas offcanvas-end bgColor text-white" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                        <div className="offcanvas-header">
-                            <h5 className="offcanvas-title" id="offcanvasRightLabel"> &nbsp; {user.displayName}</h5>
-                            <button type="button" className="btn-close " data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div className="offcanvas-body">
-
-                         {/* Users Post */}
-<h2>Posts</h2>
-<div className='container userPost rounded-3'>
-    {
-        userPost.length > 0 ? (
-            <div className='row'>
-                {userPost.map((post, index) => (
-                    <div key={index} className='card mb-3 '  style={{background: '#212529', color: '#fff'}}> 
-                        <div className='card-header d-flex align-items-center'>
-                            <img src={post.photoURL} alt={post.displayName} style={{ width: '50px', borderRadius: '50%', marginRight: '15px' }} />
-                            <h5 className='mb-0'>{post.displayName}</h5>
-                        </div>
-                        <div className='card-body ' >
-                            <p className='card-text'>{post.text}</p>
-                            <div className='d-flex justify-content-between'>
-                                <span>
-                                    <i className="fa-solid fa-heart red"></i> {post.likesCount} Likes
-                                </span>
-                                <span>
-                                <a className="btn btn-primary rounded-pill" data-bs-toggle="collapse" href={`#collapseExample${index}`} role="button" aria-expanded="false" aria-controls="collapseExample">
-                                <i className="fa-regular fa-comment" data-bs-toggle='collapse'></i> {post.commentsCount} Comments</a>
-                                   
-                                </span>
-                            </div>
-                        </div>
-
-                     <div className='collpase' id={`collapseExample${index}`} >
-                        {post.comments.length > 0 && (
-                            <ul className='list-group list-group-flush  ' >
-                                {post.comments.map((comment, idx) => (
-                                    <li key={idx} className='list-group-item d-flex align-items-center' style={{background: '#212529', color: '#fff', border: '0'}}>
-                                        <img src={comment.photo} alt={comment.name} style={{ width: '30px', borderRadius: '50%', marginRight: '10px' }} />
-                                        <strong>{comment.name}:</strong> <span className='ms-2'>{comment.comment}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                        </div>
-
-
-                    </div>
-                ))}
+        {/* Offcanvas for User Profile */}
+        <div className="offcanvas offcanvas-end bgColor text-white" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div className="offcanvas-header">
+                <h5 className="offcanvas-title" id="offcanvasRightLabel"> &nbsp; {user.displayName}</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-        ) : (
-            <span>No Posts</span>
-        )
-    }
-</div>
-
-
-                            
-
-
-                            <button className='btn btn-secondary' onClick={logout}> Log Out</button>
-                        </div>
-                    </div>
-
-
-
-
-                    <footer className=''>
-                        <i className="fa-solid fa-house"></i>
-                        <i className="fa-solid fa-magnifying-glass"></i>
-                        <button
-                            className="button"
-                            type="button"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasTop"
-                            aria-controls="offcanvasTop"
-                        >
-                            <i className="fa-solid fa-plus"></i>
-                        </button>
-                        <i className="fa-regular fa-heart"></i>
-                        <i style={{ cursor: 'pointer' }} data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" className="fa-solid fa-user"></i>
-                    </footer>
-
-                    <div
-                        className="offcanvas offcanvas-top"
-                        style={{ background: '#403d3d', color: '#fff' }}
-                        tabIndex="-1"
-                        id="offcanvasTop"
-                        aria-labelledby="offcanvasTopLabel"
-                    >
-                        <div className="offcanvas-header text-center">
-                            <h5 className="offcanvas-title text-center" id="offcanvasTopLabel">New Ripple</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-
-                        { /*  create post */}
-                        <div className="offcanvas-body position-relative container-fluid">
-                            <div className='post'>
-                                <div><img src={user.photoURL} alt={user.displayName} /></div>
-                                <div className='body'>
-                                    <h5>{user.displayName}</h5>
-                                    <input
-                                        type="text"
-                                        value={text}
-                                        placeholder='Start a ripple...'
-                                        onChange={(e) => setText(e.target.value)}
-                                        
-                                    />
-                                    <input type='file' onChange={handleFileChange} />
+            <div className="offcanvas-body">
+                {/* User's Posts */}
+                <h2>Posts</h2>
+                <div className="container userPost rounded-3">
+                    {userPost.length > 0 ? (
+                        <div className="row">
+                            {userPost.map((post, index) => (
+                                <div key={index} className="card mb-3 bg-dark text-white">
+                                    <div className="card-header d-flex align-items-center">
+                                        <img src={post.photoURL} alt={post.displayName} className="rounded-circle me-3" style={{ width: "50px" }} />
+                                        <h5 className="mb-0">{post.displayName}</h5>
+                                    </div>
+                                    <div className="card-body">
+                                        <p className="card-text">{post.text}</p>
+                                        <div className="d-flex justify-content-between">
+                                            <span>
+                                                <i className="fa-solid fa-heart text-danger"></i> {post.likesCount} Likes
+                                            </span>
+                                            <span>
+                                                <button className="btn btn-primary rounded-pill" data-bs-toggle="collapse" href={`#collapseExample${index}`} role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                    <i className="fa-regular fa-comment"></i> {post.commentsCount} Comments
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="collapse" id={`collapseExample${index}`}>
+                                        {post.comments.length > 0 && (
+                                            <ul className="list-group list-group-flush">
+                                                {post.comments.map((comment, idx) => (
+                                                    <li key={idx} className="list-group-item bg-dark text-white border-0 d-flex align-items-center">
+                                                        <img src={comment.photo} alt={comment.name} className="rounded-circle me-2" style={{ width: "30px" }} />
+                                                        <strong>{comment.name}:</strong> <span className="ms-2">{comment.comment}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
                                 </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <span>No Posts</span>
+                    )}
+                </div>
 
-                                {text && (
-                                    <button
-                                        onClick={createPost}
-                                        id='post'
-                                        type="button"
-                                        className="btn btn-primary postBtn"
-                                    >
-                                        Post
-                                    </button>
-                                )}
+                <button className="btn btn-secondary mt-3" onClick={logout}>Log Out</button>
+            </div>
+        </div>
+
+        {/* Footer Navigation */}
+        <footer className="d-flex justify-content-around py-3">
+            <i className="fa-solid fa-house"></i>
+            <i className="fa-solid fa-magnifying-glass"></i>
+            <button className="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
+                <i style={{color: '#fff'}} className="fa-solid fa-plus"></i>
+            </button>
+            <i className="fa-regular fa-heart"></i>
+            <i className="fa-solid fa-user" style={{ cursor: "pointer" }} data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
+        </footer>
+
+        {/* Offcanvas for Creating Post */}
+        <div className="offcanvas offcanvas-top" style={{ background: "#403d3d", color: "#fff" }} tabIndex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+            <div className="offcanvas-header text-center">
+                <h5 className="offcanvas-title" id="offcanvasTopLabel">New Ripple</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div className="offcanvas-body container-fluid">
+                <div className="post">
+                    <div><img src={user.photoURL} alt={user.displayName} className="rounded-circle" /></div>
+                    <div className="body">
+                        <h5>{user.displayName}</h5>
+                        <input
+                            type="text"
+                            value={text}
+                            placeholder="Start a ripple..."
+                            onChange={(e) => setText(e.target.value)}
+                            className="form-control my-2"
+                        />
+                        <input type="file" onChange={handleFileChange} className="form-control" />
+                    </div>
+                    {text && (
+                        <button
+                            onClick={createPost}
+                            id="post"
+                            type="button"
+                            className="btn btn-primary mt-2"
+                        >
+                            Post
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+
+        <ChakraProvider>
+            {/* Post Field */}
+            {posts ? (
+                <div className="container">
+                    {posts.map((post) => (
+                        <div key={post.id} className="post mb-5">
+                            <div>
+                                <img className="userPhoto rounded-circle" src={post.photoURL} alt={post.displayName} style={{ width: "50px" }} />
+                            </div>
+                            <div className="post-body">
+                                <h5>{post.displayName}</h5>
+                                <p>{post.text}</p>
+                                {post.postImg && (isMp3Url(post.postImg) ? (
+                                    <audio  controls>
+                                        <source  src={post.postImg} />
+                                    </audio>
+                                ) : (
+                                    <img style={postPhotoStyle} src={post.postImg} alt="uploaded content" />
+                                ))}
+                                <div className="d-flex justify-content-between mt-2">
+                                    <p>
+                                        {post.likesCount} &nbsp;
+                                        <i
+                                            onClick={() => handleLike(post.id, post.likedBy || [])}
+                                            className={`fa-regular fa-heart ${post.likedBy?.some(like => like.uid === user.uid) ? "disabled fa-solid text-danger" : ""}`}
+                                            style={{ cursor: post.likedBy?.some(like => like.uid === user.uid) ? "not-allowed" : "pointer" }}
+                                        ></i>
+                                    </p>
+                                    <p>
+                                        {post.commentsCount} &nbsp;
+                                        <i
+                                            onClick={() => openCommentModal(post.id)}
+                                            className="fa-regular fa-comment"
+                                            style={{ cursor: "pointer" }}
+                                        ></i>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <ChakraProvider>
-                        {/* Post Field */}
-                        {posts ? (
-                            <div className='container'>
-                                {posts.map((post) => (
-                                    <div key={post.id} className='post mb-4'>
-                                        <div   ><img style={imgStyle} src={post.photoURL} alt={post.displayName} /></div>
-                                        <div  className='post-body'>
-                                            <h5 style={{ fontSize: '18px' }}>{post.displayName}</h5>
-                                            <p>{post.text}</p>
-    {/*  add image and audio*/}            {post.postImg && (isMp3Url(post.postImg) ? 
-                                         (<audio controls>
-                                            <source src={post.postImg} />
-                                         </audio>) : (<img src={post.postImg} />)
-    
-)}
-
-
-
-
-                                            <div className='likes'>
-                                                <p className=''>
-                                                    {post.likesCount} &nbsp;
-                                                    <i
-                                                        onClick={() => handleLike(post.id, post.likedBy || [])}
-                                                        className={`fa-regular fa-heart ${post.likedBy?.some(like => like.uid === user.uid) ? 'disabled fa-solid red' : ''}`}
-                                                        style={{ cursor: post.likedBy?.some(like => like.uid === user.uid) ? 'not-allowed' : 'pointer' }}
-                                                    ></i>
-                                                </p>
-                                                <p>{post.commentsCount} &nbsp; <i style={{cursor: 'pointer'}} onClick={() => openCommentModal(post.id)} className="fa-regular fa-comment"></i></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (<p>Nothing here</p>)}
-
-                        {/* Modal for comments */}
-                        <Modal onClose={onClose} isOpen={isOpen} isCentered>
-                            <ModalOverlay />
-                            <ModalContent style={bgColor}>
-                                <ModalHeader>Comments</ModalHeader>
-                                <ModalCloseButton />
-                                <ModalBody>
-                                    {posts.find(post => post.id === activePost)?.comments?.map((c, index) => (
-                                        <div key={index} className='d-flex'>
-                                            <p>{c.name}: {c.comment}</p>
-                                        </div>
-                                    ))}
-                                    <div className='cmtSection'>
-                                    
-                                        <div>
-                                        <Input
-                                            placeholder='Add a comment...'
-                                            size='md'
-                                            value={comment}
-                                            onChange={(e) => setComment(e.target.value)}
-
-                                        />
-
-                                        
-                                        <Button  colorScheme='gray' onClick={() => handleComment(activePost)}>Comment</Button>
-                                        </div>
-
-                                    </div>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button onClick={onClose}>Close</Button>
-                                </ModalFooter>
-                            </ModalContent>
-                        </Modal>
-                    </ChakraProvider>
-
-                    <ToastContainer />
+                    ))}
                 </div>
             ) : (
-                <div className='loader'></div>
+                <p className="text-center text-white">Nothing here</p>
             )}
+
+            {/* Modal for comments */}
+            <Modal onClose={onClose} isOpen={isOpen} isCentered>
+                <ModalOverlay />
+                <ModalContent style={{ background: "#403d3d", color: "#fff" }}>
+                    <ModalHeader>Comments</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        {posts.find(post => post.id === activePost)?.comments?.map((c, index) => (
+                            <div key={index} className="d-flex">
+                                <p>{c.name}: {c.comment}</p>
+                            </div>
+                        ))}
+                        <div className="cmtSection mt-3">
+                            <Input
+                                placeholder="Add a comment..."
+                                size="md"
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                            />
+                            <Button colorScheme="gray" onClick={() => handleComment(activePost)} className="mt-2">
+                                Comment
+                            </Button>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button onClick={onClose}>Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </ChakraProvider>
+
+        <ToastContainer />
+    </div>
+) : (
+    <div className="loader"></div>
+)}
+
         </>
     );
 }

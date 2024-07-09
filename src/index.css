@@ -70,13 +70,9 @@ body {
 @media (max-width: 768px) {
   .post {
     width: 100%;
-    height: 90px;
+   
     font-size: 1px;;
     
   }
-  .post div img {
-    width: 20px !important;
-    height: 20px;
-    border-radius: 50% !important;
-  }
+
 }
