@@ -273,7 +273,7 @@ function Profile() {
                         console.log('Upload is ' + progress + '% done');
                         if (progress === 100) {
                             console.log('Upload completed!');
-                            toast.success('image uploaded', {
+                            toast.success('file uploaded', {
                                 position: "top-right",
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -307,13 +307,13 @@ function Profile() {
         }
     };
     
- const isMp3Url = (url) => {
-    const regex = /\.mp3(?:\?|$)/;
-    return regex.test(url);
- }
+    const isMediaUrl = (url, type) => {
+        const regex = new RegExp(`\\.${type}(?:\\?|$)`);
+        return regex.test(url);
+    };
 
    
-   
+ 
    
 
     return (
@@ -334,6 +334,8 @@ function Profile() {
                 {/* User's Posts */}
                 <h2>Posts</h2>
                 <div className="container userPost rounded-3">
+
+                    <input type="range" id='uploadPost' />
                     {userPost.length > 0 ? (
                         <div className="row">
                             {userPost.map((post, index) => (
@@ -436,13 +438,19 @@ function Profile() {
                             <div className="post-body">
                                 <h5>{post.displayName}</h5>
                                 <p>{post.text}</p>
-                                {post.postImg && (isMp3Url(post.postImg) ? (
-                                    <audio  controls>
-                                        <source  src={post.postImg} />
-                                    </audio>
-                                ) : (
-                                    <img style={postPhotoStyle} src={post.postImg} alt="uploaded content" />
-                                ))}
+                                {post.postImg && (
+                                  isMediaUrl(post.postImg, 'mp3') ? (
+                                  <audio controls>
+                                  <source src={post.postImg} />
+                                  </audio>
+                                  ) : isMediaUrl(post.postImg, 'mp4') ? (
+                                  <video  controls>
+                                  <source  src={post.postImg} />
+                                  </video>
+                                  ) : (
+                                <img style={postPhotoStyle} src={post.postImg} alt="uploaded content" />
+                                )
+                                )}
                                 <div className="d-flex justify-content-between mt-2">
                                     <p>
                                         {post.likesCount} &nbsp;

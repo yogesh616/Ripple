@@ -61,6 +61,7 @@ footer {
     justify-content: space-around;
     align-items: center;
     background: #212529;
+    z-index: 2;
     /* From https://css.glass */
 }
 
@@ -231,4 +232,11 @@ input[type="file"]::file-selector-button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+
+video {
+    width: 190px;
+    height: 100%;
+    border-radius: 15px;
 }

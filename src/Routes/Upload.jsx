@@ -1,41 +1,17 @@
-import React, { useEffect } from 'react';
-import * as mm from 'music-metadata-browser';
-
+import React from 'react'
+import './upload.css';
 function Upload() {
-  const checkFile = async () => {
-    const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/threads-12bd6.appspot.com/o/uploads%2FCalifornia%20Love(PagalWorld.com.cm).mp3?alt=media&token=3b52c5a0-6163-4522-acd1-2399953669f4';
-    
-    try {
-      // Fetch the file as a Blob
-      const response = await fetch(fileUrl);
-      const blob = await response.blob();
-
-      // Parse the Blob using music-metadata-browser
-      const metadata = await mm.parseBlob(blob);
-      console.log(metadata);
-    } catch (error) {
-      console.error('Error reading metadata:', error.message);
-    }
-  };
-
-  useEffect(() => {
-    checkFile();
-  }, []);
-
-useEffect(()=> {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  alert(`width="${w}px" height="${h}"`)
-}, [])
-
-
-
+  const url = 'https://firebasestorage.googleapis.com/v0/b/threads-12bd6.appspot.com/o/uploads%2F_6ced560a-2867-489d-b3c9-10463d1d2d3e.jpeg?alt=media&token=405205db-2641-496b-b979-cace3f7c9368';
 
   return (
-    <div>
-      <h1>Check MP3 File</h1>
+    <>
+    <div className='upload'>
+   
+   <img src={url} alt="uploaded content" />
     </div>
-  );
+     
+    </>
+  )
 }
 
-export default Upload;
+export default Upload
