@@ -15,14 +15,7 @@ function Login() {
   const navigate = useNavigate()
 
 
- useEffect(()=> {
-  const Email = localStorage.getItem('email')
-  const Password = localStorage.getItem('password')
-  if ( Email && Password) {
-    setEmail(Email)
-    setPassword(Password)
-  }
- })
+
 
   async function signinwithgoogle() {
     try {
@@ -93,8 +86,8 @@ async function login() {
          <p>We are happy to have you back.</p>
          </div> 
          <div className='formPage py-3'>
-           <input type="text" className="my-3" placeholder="Email" value={email} onChange={(e)=> setEmail(e.target.value)} aria-describedby="addon-wrapping" />
-           <input type="password" className="my-3" placeholder="Password" value={password} onChange={(e)=> setPassword(e.target.value)} aria-describedby="addon-wrapping" />
+           <input type="text" className="my-3" placeholder="Try test@gmail.com for testing" value={email} onChange={(e)=> setEmail(e.target.value)} aria-describedby="addon-wrapping" />
+           <input type="password" className="my-3" placeholder="testuser" value={password} onChange={(e)=> setPassword(e.target.value)} aria-describedby="addon-wrapping" />
           <button className='btn btn-primary w-100' onClick={login}>Login</button>
            <button type="button" onClick={signinwithgoogle}  className="btn w-100 text-dark my-3" style={{background: '#dddfe0'}}><img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="" /> Signin with Google</button>
          </div>

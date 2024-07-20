@@ -41,38 +41,130 @@ body {
   background-color: #212529;
   
 }
-
-.chat {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-}
+/* chat.css */
 .chat-page {
-  width: 100% !important;
-  height: 100% !important;
-  background: #212529;
-}
-.btn-close {
-  color: #fff !important;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f0f0f0;
 }
 
-.flex {
+.chatMain {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex: 1;
+}
+
+.side1, .side2 {
+  width: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.side1 {
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  width: 100vw;
   
 }
-.flex p {
- padding-top: 5px !important;
+
+.side2 {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  overflow-y: auto;
+  display: none;
 }
 
-@media (max-width: 768px) {
-  .post {
-    width: 100%;
-   
-    font-size: 1px;;
-    
-  }
-
+.list-group-item {
+  cursor: pointer;
+  border: none;
+  padding: 10px;
+ 
 }
+strong {
+  color: #000
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+ 
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  height: 70vh;
+  overflow-y: auto;
+}
+
+.message {
+  margin-bottom: 1rem;
+  display: flex;
+  word-wrap: break-word;
+  max-width: 80%;
+  font-family: "Noto Sans", sans-serif;
+}
+
+.sent {
+  align-self: flex-end;
+  text-align: right;
+}
+
+.received {
+  align-self: flex-start;
+  text-align: left;
+}
+
+.sent p {
+  background-color: #3797f0;
+  color: #fff;
+  padding: 0.6rem 0.8rem;
+  border-radius: 20px;
+}
+
+.received p {
+  background-color: #585757;
+  color: #e0e0e0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 20px;
+}
+
+.message-input-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.form-control {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #393737;
+  border-radius: 8px;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+  background: transparent;
+  border-radius: 25px;
+  color: #e0e0e0;
+}
+
+.btn-primary {
+  background-color: #262626;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+
+
