@@ -1,8 +1,16 @@
-# React + Vite
+Ripple  is a web application built with React and Firebase, designed to function similarly to popular social media platforms.
+Features
+User Authentication (Sign Up, Login, Logout)
+Post creation and sharing
+Commenting on posts
+Real-time updates
+User profiles
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+Tech Stack
+Frontend: React
+Backend: Firebase (Authentication, Firestore, Storage)
+Hosting: Vercel
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Test 
+https://ripple-steel.vercel.app/
