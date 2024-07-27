@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import logo from '../assets/logo.png';
 import avatar from '../assets/user.png';
 import './profile.css';
@@ -38,9 +38,17 @@ function Profile() {
     const [progress, setProgress] = useState(0);
     const [downloadURL, setDownloadURL] = useState('');
     const [loading, setLoading] = useState(false);
-    const [postTime, setPostTime] = useState()
+    const [postTime, setPostTime] = useState();
+    const [fullSize, setFullSize] = useState(null);
+   
     
-  
+    const seeFullSize = (src)=> {
+        setFullSize(src)
+    };
+    
+    const closeFullSize = ()=> {
+       setFullSize(null);
+    };
    
 
     // Chakra UI
@@ -65,6 +73,7 @@ function Profile() {
         maxWidth: '10rem',
         padding: '0.25rem',
         objectFit: 'cover',
+        cursor: 'pointer'
         };
         
         
@@ -74,8 +83,10 @@ function Profile() {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUser(user);
-                
+               
+                const userDisplayName = encodeURIComponent(user.displayName);
                 setUID(user.uid);
+            //    navigate(`/user/${userDisplayName}`);
 
                 toast.success(`Welcome ${user.displayName}`, {
                     position: "top-right",
@@ -267,9 +278,10 @@ function Profile() {
     }, [user]);
 
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-      };
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+       setFile(selectedFile);
+    };
     
       const handleUpload = async () => {
         if (file) {
@@ -358,8 +370,9 @@ return formattedDate;
             <img src={logo} alt="Logo" />
             {/*  post uploading loader */}
           
-            {loading && (<span className="load"></span>)}
 
+
+{loading && (<div id='loader'></div>)}
          
 
 
@@ -372,7 +385,7 @@ return formattedDate;
   <h5 className="offcanvas-title mb-2 mb-md-0" id="offcanvasRightLabel">
     &nbsp; {user.displayName}
   </h5>
-  <img src={user.photoURL} alt="" className="img-fluid" style={{ maxWidth: '50px', borderRadius: '50%' }} />
+ {/* <img src={user.photoURL} alt="" className="img-fluid" style={{ maxWidth: '50px', borderRadius: '50%' }} /> */}
 </div>
 
                
@@ -385,28 +398,16 @@ return formattedDate;
 
 
                 {/* User's Posts */}
-                <div className="accordion " id="accordionExample">
-  <div className="accordion-item">
-    <h2 className="accordion-header">
-      <button className="accordion-button" style={{background: 'transparent', color: 'red'}} type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Posts
-      </button>
-    </h2>
-    <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-      <div className="accordion-body " style={{background: '#212529'}}>
-
-      <div className="container userPost rounded-3">
-
-                    
+               
 {userPost.length > 0 ? (
-    <div className="row">
+    <div className="usrPost">
         {userPost.map((post, index) => (
-            <div key={index} className="card mb-3 bg-dark text-white">
-                <div className="card-header d-flex align-items-center">
+            <div key={index} className="car">
+                <div className="">
                     <img src={post.photoURL} alt={post.displayName} className="rounded-circle me-3" style={{ width: "50px" }} />
                     <h5 className="mb-0">{post.displayName}</h5>
                 </div>
-                <div className="card-body userPostData">
+                <div className="userPostData">
                     <p className="card-text">{post.text}</p>
                     {post.postImg && (
               isMediaUrl(post.postImg, 'mp3') ? (
@@ -418,17 +419,19 @@ return formattedDate;
               <source  src={post.postImg} />
               </video>
               ) : (
-            <img style={postPhotoStyle} src={post.postImg} alt="uploaded content" />
+            <img style={postPhotoStyle} src={post.postImg} alt="uploaded content" onClick={() => seeFullSize(post.postImg)} />
             )
             )}
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between px-3 ">
                         <span>
                             <i className="fa-solid fa-heart text-danger"></i> {post.likesCount} Likes
                         </span>
                         <span>
-                            <button className="btn btn-primary rounded-pill position-relative" data-bs-toggle="collapse" href={`#collapseExample${index}`} role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <button className=" cmtBtn btn btn-primary rounded-pill position-relative" style={{width: '7rem'}} data-bs-toggle="collapse" href={`#collapseExample${index}`} role="button" aria-expanded="false" aria-controls="collapseExample">
+                          { post.commentsCount > 0 && (
                             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {post.commentsCount}</span>
+                            {post.commentsCount}</span>)
+        }
                                { /* <i className="fa-regular fa-comment"></i> {post.commentsCount} Comments */ }
                                Comments
                             </button>
@@ -437,9 +440,9 @@ return formattedDate;
                 </div>
                 <div className="collapse" id={`collapseExample${index}`}>
                     {post.comments.length > 0 && (
-                        <ul className="list-group list-group-flush">
+                        <ul className="list-group list-group-flush" >
                             {post.comments.map((comment, idx) => (
-                                <li key={idx} className="list-group-item bg-dark text-white border-0 d-flex align-items-center">
+                                <li key={idx} className="list-group-item  text-secondary border-0 d-flex align-items-center my-1 rounded-pill" style={{background: '#fbd0cc'}}>
                                     <img src={comment.photo} alt={comment.name} className="rounded-circle me-2" style={{ width: "30px" }} />
                                     <strong>{comment.name}:</strong> <span className="ms-2">{comment.comment}</span>
                                 </li>
@@ -453,13 +456,6 @@ return formattedDate;
 ) : (
     <span>No Posts</span>
 )}
-</div>
-
-
-       </div>
-    </div>
-  </div>
-  </div>
 
 
                 
@@ -483,6 +479,12 @@ return formattedDate;
             <i className="fa-solid fa-user" style={{ cursor: "pointer" }} data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
         </footer>
 
+
+
+
+
+        
+
         {/* Offcanvas for Creating Post */}
         <div className="offcanvas offcanvas-top" style={{ background: "#403d3d", color: "#fff" }} tabIndex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
             <div className="offcanvas-header text-center">
@@ -491,7 +493,7 @@ return formattedDate;
             </div>
             <div className="offcanvas-body container-fluid">
                 <div className="post">
-                    <div><img src={user.photoURL} alt={user.displayName} className="rounded-circle" /></div>
+                    <div><img src={user.photoURL} alt={user.displayName} className="rounded-circle" loading='lazy' /></div>
                     <div className="body">
                         <h5>{user.displayName}</h5>
                         <input
@@ -501,17 +503,51 @@ return formattedDate;
                             onChange={(e) => setText(e.target.value)}
                             className="form-control my-2"
                         />
-                        <input type="file" onChange={handleFileChange} className="form-control" />
+                      
+    {/*}  
+      <input
+        type="file"
+        onChange={handleFileChange}
+        className="file-input"
+        aria-label="Upload image"
+      />
+      */ }
+
+<label className="custum-file-upload" htmlFor="file">
+<div className="icon">
+<svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g strokeWidth="0" id="SVGRepo_bgCarrier"></g><g strokeLinejoin="round" strokeLinecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clipRule="evenodd" fillRule="evenodd"></path> </g></svg>
+</div>
+<div className="text">
+   <span>Click to upload image</span>
+   </div>
+   <input type="file" id="file" onChange={handleFileChange} />
+</label>
+
+
+   
                     </div>
                     {text && (
-                        <button
-                            onClick={createPost}
-                            id="post"
-                            type="button"
-                            className="btn btn-primary mt-2"
-                        >
-                            Post
-                        </button>
+                      
+
+<button id='ldr' onClick={createPost}>
+  <span className="span-mother">
+    <span>P</span>
+    <span>o</span>
+    <span>s</span>
+    <span>t</span>
+    
+  </span>
+  <span className="span-mother2">
+    <span>P</span>
+    <span>o</span>
+    <span>s</span>
+    <span>t</span>
+   
+  </span>
+</button>
+
+
+
                     )}
                 </div>
             </div>
@@ -543,7 +579,7 @@ return formattedDate;
                                   <source  src={post.postImg} />
                                   </video>
                                   ) : (
-                                <img style={postPhotoStyle} src={post.postImg} alt="uploaded content" />
+                                <img loading='lazy' style={postPhotoStyle} src={post.postImg} alt="uploaded content"  onClick={() => seeFullSize(post.postImg)} />
                                 )
                                 )}
                                 <div className="d-flex justify-content-between mt-2">
@@ -601,6 +637,16 @@ return formattedDate;
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            { /* full size image*/}
+
+            {fullSize && (
+                <div className="fullSizeImage" onClick={closeFullSize}>
+                    <img src={fullSize} alt="Full Size" />
+                    <button onClick={closeFullSize}>
+                    <i className="fa-solid fa-x"></i>
+                    </button>
+                </div>
+            )}
         </ChakraProvider>
 
         <ToastContainer />

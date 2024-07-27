@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { db, auth } from '../firebase';
 import { collection, addDoc, Timestamp, query, where, onSnapshot, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -6,6 +6,8 @@ import profilePic from '../assets/profile.png';
 import '../index.css';
 import { Link } from 'react-router-dom';
 import { Popover } from 'react-tiny-popover';
+import sendIcon from '../assets/send.png'
+import { useNavigate } from 'react-router-dom';
 
 function Chat() {
     const [user, setUser] = useState(null);
@@ -20,6 +22,8 @@ function Chat() {
     const side1 = useRef(null);
     const side2 = useRef(null);
     const backBtn = useRef(null);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -51,6 +55,14 @@ function Chat() {
             unsubscribe();
         };
     }, []);
+
+    const handleCalls = () => {
+        if (user) {
+            const username = user.displayName;
+            const callerId = user.uid.toString();
+            navigate(`/call/${username}/${callerId}`)
+        }
+    }
 
     useEffect(() => {
         if (selectedUser && user) {
@@ -146,6 +158,9 @@ function Chat() {
        
     }
 
+  
+ 
+
     return (
         <div className='chat-page'>
             {user ? (
@@ -153,6 +168,7 @@ function Chat() {
                     <Link ref={backBtn} to='/profile' className="back-button"><i className="fa-solid fa-arrow-left"></i></Link>
                     <div className='side1' ref={side1}>
                         <ul className="list-group ulList">
+                        <div className='text-center'><i className="fa-solid fa-video" onClick={handleCalls}></i></div>
                             {userList.map((u, index) => (
                                 <li  ref={liTag}
                                     onClick={() => { 
@@ -181,7 +197,8 @@ function Chat() {
                             <div className='d-flex aligin-items-center justify-content-between'>
                                 <div className='d-flex align-items-center'>
                                 <img src={activeChat.photoURL} className="rounded-circle me-2" style={{ width: "50px" }} />
-                                <strong>{activeChat.displayName}</strong>
+                                <strong className='username'>{activeChat.displayName}</strong>
+                              
 
                                    </div>
                                    <button onClick={handleCloseChatContainer} type="button" className="btn-close ms-5" aria-label="Close"></button> </div>
@@ -216,10 +233,10 @@ function Chat() {
                                         value={message} 
                                         onChange={(e) => setMessage(e.target.value)} 
                                         className="form-control" 
-                                        placeholder="Type your message..."
+                                        placeholder="Write"
                                     />
                                     <button onClick={() => sendMessage(selectedUser.uid)} className="btn btn-primary mt-2">
-                                        Send
+                                        <img src={sendIcon} />
                                     </button>
                                 </div>
                             </div>
