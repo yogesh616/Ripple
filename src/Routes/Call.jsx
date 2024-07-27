@@ -15,7 +15,7 @@ function Call() {
             container: elem,
             sharedLinks: [{
                 name: 'Copy Link',
-                url: `https://ripple-steel.vercel.app/call/${username}/${callId}`
+                url: `https://ripple-steel.vercel.app/call/${encodeURIComponent(username)}/${callId}`
             }],
             scenario: {
                 mode: ZegoUIKitPrebuilt.OneONoneCall,
