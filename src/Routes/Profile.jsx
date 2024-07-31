@@ -6,6 +6,7 @@ import logo from '../assets/logo.png';
 import avatar from '../assets/user.png';
 import './profile.css';
 import '../index.css'
+import './pageLoader.css'
 import { collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, updateDoc, doc, arrayUnion, increment, where, setDoc, getDoc, getDocs } from 'firebase/firestore';
 import {
     Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
@@ -16,9 +17,11 @@ import EmojiPicker from 'emoji-picker-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebase';
-import ReactAudioPlayer from 'react-audio-player';
+
 import { Link } from 'react-router-dom';
-import social from '../assets/social.png'
+import social from '../assets/social.png';
+
+
 
 
 
@@ -40,6 +43,8 @@ function Profile() {
     const [loading, setLoading] = useState(false);
     const [postTime, setPostTime] = useState();
     const [fullSize, setFullSize] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [audioPlayer, setAudioPlayer] = useState(null);
    
     
     const seeFullSize = (src)=> {
@@ -360,6 +365,24 @@ return formattedDate;
 
    }
  
+
+
+   const handlePlayPause = (audioURL) => {
+    if (audioPlayer && audioPlayer.src === audioURL) {
+      if (isPlaying) {
+        audioPlayer.pause();
+      } else {
+        audioPlayer.play();
+      }
+      setIsPlaying(!isPlaying);
+    } else {
+      if (audioPlayer) audioPlayer.pause();
+      const newAudioPlayer = new Audio(audioURL);
+      newAudioPlayer.play();
+      setAudioPlayer(newAudioPlayer);
+      setIsPlaying(true);
+    }
+  };
    
 
     return (
@@ -368,7 +391,12 @@ return formattedDate;
     <div className="profile bg-dark">
         <nav className="text-center">
             <img src={logo} alt="Logo" />
+     
+      {/*  page loader */}
+     
+     
             {/*  post uploading loader */}
+
           
 
 
@@ -410,18 +438,27 @@ return formattedDate;
                 <div className="userPostData">
                     <p className="card-text">{post.text}</p>
                     {post.postImg && (
-              isMediaUrl(post.postImg, 'mp3') ? (
-              <audio controls loop>
-              <source src={post.postImg} />
-              </audio>
-              ) : isMediaUrl(post.postImg, 'mp4') ? (
-              <video  controls loop>
-              <source  src={post.postImg} />
-              </video>
-              ) : (
-            <img style={postPhotoStyle} src={post.postImg} alt="uploaded content" onClick={() => seeFullSize(post.postImg)} />
-            )
-            )}
+    isMediaUrl(post.postImg, 'mp3') ? (
+        <div>
+        <button onClick={() => handlePlayPause(post.postAudio)}>
+          {isPlaying ? 'Pause' : 'Play'}
+        </button>
+      </div>
+
+      
+    ) : isMediaUrl(post.postImg, 'mp4') ? (
+        <audio id='audio1' controls loop>
+            <source src={post.postImg} />
+        </audio>
+    ) : (
+        <img 
+            style={postPhotoStyle} 
+            src={post.postImg} 
+            alt="uploaded content" 
+            onClick={() => seeFullSize(post.postImg)} 
+        />
+    )
+)}
                     <div className="d-flex justify-content-between px-3 ">
                         <span>
                             <i className="fa-solid fa-heart text-danger"></i> {post.likesCount} Likes
@@ -571,7 +608,7 @@ return formattedDate;
                                 <p>{post.text}</p>
                                 {post.postImg && (
                                   isMediaUrl(post.postImg, 'mp3') ? (
-                                  <audio controls loop>
+                                  <audio id='audio' controls loop>
                                   <source src={post.postImg} />
                                   </audio>
                                   ) : isMediaUrl(post.postImg, 'mp4') ? (
@@ -652,7 +689,7 @@ return formattedDate;
         <ToastContainer />
     </div>
 ) : (
-    <div className="loader"></div>
+    <div className='pageLoader'><img src={logo} alt="" /> </div>
 )}
 
         </>
