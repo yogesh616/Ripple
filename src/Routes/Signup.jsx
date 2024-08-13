@@ -75,7 +75,7 @@ function Signup() {
          <div className='formPage py-3'>
            <input type="text" className="my-3" placeholder="Email" value={email} onChange={(e)=> setEmail(e.target.value)} aria-describedby="addon-wrapping" />
            <input type="password" className="my-3" placeholder="Password" value={password}  onChange={(e)=> setPassword(e.target.value) } aria-describedby="addon-wrapping" />
-           <button onClick={signup} className='btn btn-primary w-100'>Signup</button>
+           <button onClick={signup} className='btn btn-primary w-100' style={{background: '#59DCE1'}}>Signup</button>
            <button onClick={signinwithgoogle} type="button" className="btn w-100 text-dark my-3" style={{background: '#dddfe0'}}><img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="" /> Signin with Google</button>
          </div>
          <div className='bottomText'>Already have an account <Link to='/' style={LinkStyle}>Login</Link></div>

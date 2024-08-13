@@ -64,6 +64,9 @@ footer {
     z-index: 2;
     /* From https://css.glass */
 }
+footer i {
+  font-size: 20px;
+}
 
 .button {
     background: transparent;

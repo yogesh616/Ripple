@@ -88,12 +88,12 @@ function Profile() {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUser(user);
-               
-                const userDisplayName = encodeURIComponent(user.displayName);
+               console.log('User', user);
+                const userDisplayName = encodeURIComponent(user.displayName );
                 setUID(user.uid);
             //    navigate(`/user/${userDisplayName}`);
 
-                toast.success(`Welcome ${user.displayName}`, {
+                toast.success(`Welcome ${user.displayName || user.email}`, {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -411,17 +411,20 @@ return formattedDate;
             <div className="offcanvas-header mb-3">
             <div className='d-flex align-items-center justify-content-between flex-wrap w-100 mt-5'>
   <h5 className="offcanvas-title mb-2 mb-md-0" id="offcanvasRightLabel">
-    &nbsp; {user.displayName}
+    &nbsp; {user.displayName}    
   </h5>
  {/* <img src={user.photoURL} alt="" className="img-fluid" style={{ maxWidth: '50px', borderRadius: '50%' }} /> */}
 </div>
+<button className="logout" onClick={logout}>
+ Logout
+</button>
 
                
                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div className="offcanvas-body">
             {/* User's Bio */ }
-            
+           
 
 
 
@@ -431,32 +434,37 @@ return formattedDate;
     <div className="usrPost">
         {userPost.map((post, index) => (
             <div key={index} className="car">
-                <div className="">
-                    <img src={post.photoURL} alt={post.displayName} className="rounded-circle me-3" style={{ width: "50px" }} />
-                    <h5 className="mb-0">{post.displayName}</h5>
+               {/*  <div className="">
+                   <img src={post.photoURL} alt={post.displayName} className="rounded-circle me-3" style={{ width: "50px" }} />
+                    <h5 className="">{post.displayName}</h5>
                 </div>
-                <div className="userPostData">
+                 */ }
+                <div className="userPostData text-center m-auto">
                     <p className="card-text">{post.text}</p>
                     {post.postImg && (
     isMediaUrl(post.postImg, 'mp3') ? (
-        <div>
-        <button onClick={() => handlePlayPause(post.postAudio)}>
-          {isPlaying ? 'Pause' : 'Play'}
-        </button>
+        <div className='text-center m-auto'>
+       <audio id='audio' controls>
+        <source src={post.postImg} />
+       </audio>
       </div>
 
       
     ) : isMediaUrl(post.postImg, 'mp4') ? (
-        <audio id='audio1' controls loop>
+        <div className='text-center m-auto'>
+            <video  controls loop>
             <source src={post.postImg} />
-        </audio>
+        </video>
+        </div>
     ) : (
-        <img 
+       <div className='text-center m-auto'>
+         <img 
             style={postPhotoStyle} 
             src={post.postImg} 
             alt="uploaded content" 
             onClick={() => seeFullSize(post.postImg)} 
         />
+       </div>
     )
 )}
                     <div className="d-flex justify-content-between px-3 ">
@@ -498,7 +506,7 @@ return formattedDate;
                 
                 
 
-                <button className="btn btn-secondary mt-3" onClick={logout}>Log Out</button>
+               
             </div>
         </div>
 

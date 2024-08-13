@@ -238,7 +238,7 @@ strong {
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  border: 2px dashed #cacaca;
+ 
   background-color: rgba(255, 255, 255, 1);
   padding: 1.5rem;
   border-radius: 10px;
@@ -286,20 +286,30 @@ strong {
 @media (max-width: 768px) {
 
   .custum-file-upload {
-    height: 100px;
-    width: 150px;
+    height: 70px;
+    width: 100px;
     display: flex;
     flex-direction: column;
     align-items: space-between;
-    gap: 20px;
+    gap: 5px;
     cursor: pointer;
     align-items: center;
     justify-content: center;
-   
+    margin-left: 1.3rem;
     background-color: rgba(255, 255, 255, 1);
     padding: 1.5rem;
     border-radius: 10px;
     box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
+  }
+  .custum-file-upload .icon {
+    width: 40px;
+   
+  }
+  .custum-file-upload .text {
+    font-size: 0.6rem;
+    padding-bottom: 1.3rem;
+    display: none;
+    
   }
 
 }
@@ -508,4 +518,9 @@ strong {
   margin-left: 2rem;
   font-size: 1.2rem;
   cursor: pointer;
+}
+
+.fa-arrow-left {
+  font-size: 1.2rem;
+  padding: 0 0 0 0.2rem;
 }
