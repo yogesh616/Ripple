@@ -326,3 +326,27 @@ button img {
     fill: #2196F3;
     fill: #666;
   }
+
+
+
+  @media (max-width: 768px) {
+    .gglBtn {
+      display: flex;
+
+    }
+    .gglBtn img {
+      margin-right: 5px;
+      margin-top: 2px;
+    }
+  }
+
+  @media (min-width: 1023px) {
+    .gglBtn {
+      display: flex;
+
+    }
+    .gglBtn img {
+      margin-right: 5px;
+      margin-top: 2px;
+    }
+  }
