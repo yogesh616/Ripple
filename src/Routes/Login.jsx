@@ -32,21 +32,12 @@ function Login() {
 
 async function login() {
     try {
-        const res = await signInWithEmailAndPassword(auth, email, password)
+        const res = await signInWithEmailAndPassword(auth, 'test@gmail.com', 'testuser')
         if (res) {
            
             navigate('/profile')
 
-            toast.success('Login Succesfully 😍', {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light"
-              });
+          
 
               localStorage.setItem('email', email)
               localStorage.setItem('password',  password)
