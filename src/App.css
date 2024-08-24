@@ -26,7 +26,7 @@ body {
 }
 
 .blueDiv {
-    
+    background: #0a3ebd;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,75 +37,6 @@ body {
     border-radius: 20px;
     color: #fff;
 }
-
-/* From Uiverse.io by reshades */ 
-/* From Uiverse.io by ernestnash */ 
-.logout {
-    display: inline-block;
-    padding: 0.5rem 1.8rem;
-    
-    font-weight: 700;
-    color: white;
-    border: 3px solid rgb(252, 70, 100);
-    cursor: pointer;
-    position: relative;
-    background-color: transparent;
-    text-decoration: none;
-    overflow: hidden;
-    z-index: 1;
-    font-family: inherit;
-    
-    border-radius: 35px;
-    margin-right: 1rem;
-    margin-top: 2px;
-   }
-   
-   .logout::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(252, 70, 100);
-    transform: translateX(-100%);
-    transition: all .3s;
-    z-index: -1;
-   }
-   
-   .logout:hover::before {
-    transform: translateX(0);
-   }
-@media (max-width: 767px) {
-    .blueDiv {
-        background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
-    }
-    .logout {
-       width: 11em;
-       font-size: 16px;
-    }
-    
-}
-@media (min-width: 768px) and (max-width: 1023px) {
-    .blueDiv {
-        background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
-    }
-    .logout {
-        width: 8em;
-    font-size: 16px;
-    }
-}
-
-@media (min-width: 1024px)  {
-    .blueDiv {
-        background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);
-    }
-    .logout {
-        width: 9em;
-        font-size: 16px;
-    }
-}
-
 
 .formPage {
     display: flex;
@@ -181,3 +112,217 @@ button img {
     width: 100% !important;
     margin: 0;
 }
+
+
+.postField {
+    border: solid 1px #e1e1e1 !important;
+    border-bottom: none !important;
+    gap: 10px;
+   
+    
+}
+@media (min-width: 1023px) {
+.postField {
+    width: 45%;
+    margin: 0 auto;
+}    
+}
+
+
+/* From Uiverse.io by SalladShooter */ 
+.like-wrapper {
+    --gap: 0.5em;
+    --radius: 0.35em;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    
+    --dot-color: #313131;
+    --dot-size: 1px;
+    --dot-space: 22px;
+    background: linear-gradient(
+          90deg,
+          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+          transparent 1%
+        )
+        center / var(--dot-space) var(--dot-space),
+      linear-gradient(
+          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+          transparent 1%
+        )
+        center / var(--dot-space) var(--dot-space),
+      var(--dot-color);
+    border: 0.1em solid #313131;
+    padding: 0.5em;
+    border-radius: 25px;
+    box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+  
+  .check[type="checkbox"] {
+    display: none;
+  }
+  
+  .container-like {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: -0.25em;
+    margin-bottom: -0.25em;
+  }
+  
+  .icon {
+    width: 15px;
+    height: 15px;
+    margin-left: 0.5em;
+    fill: white;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .icon.active {
+    display: none;
+    fill: #f52121;
+  }
+  
+  .check[type="checkbox"]:checked + .container .icon.active {
+    display: inline-block;
+    animation: wiggle 0.5s ease-in-out;
+  }
+  
+  .check[type="checkbox"]:checked + .container .icon.inactive {
+    display: none;
+  }
+  
+  .like-text {
+    margin-left: 0.5em;
+    padding: 0.5em;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-weight: bolder;
+  }
+  
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-10deg);
+    }
+    50% {
+      transform: rotate(10deg);
+    }
+    75% {
+      transform: rotate(-10deg);
+    }
+
+  }
+
+  /* From Uiverse.io by mrhyddenn */ 
+.form__group {
+  position: relative;
+  padding: 20px 0 0;
+  width: 100%;
+  max-width: 180px;
+}
+
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #9b9b9b;
+  outline: 0;
+  font-size: 17px;
+  color: #fff;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.form__field::placeholder {
+  color: transparent;
+}
+
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 17px;
+  cursor: text;
+  top: 20px;
+}
+
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: #9b9b9b;
+  pointer-events: none;
+}
+
+.form__field:focus {
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, #116399, #38caef);
+  border-image-slice: 1;
+}
+
+.form__field:focus ~ .form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: #e1e1e1;
+  font-weight: 700;
+}
+
+/* reset input */
+.form__field:required, .form__field:invalid {
+  box-shadow: none;
+}
+
+
+
+/*  like css*/
+/* From Uiverse.io by andrew-demchenk0 */ 
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .container-like {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  svg {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    transition: all 0.3s;
+    
+  }
+  /*
+  svg:hover {
+    transform: scale(1.1) rotate(-10deg);
+  }
+    */
+  
+
+
+  .active-like {
+    fill: #2196F3;
+  }
+  .inactive-like {
+    fill: #2196F3;
+    fill: #666;
+  }

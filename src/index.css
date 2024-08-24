@@ -1,3 +1,6 @@
+
+
+
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Playwrite+PE:wght@100..400&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 body {
@@ -228,47 +231,23 @@ strong {
 
 
 
-.custum-file-upload {
-  height: 150px;
-  width: 250px;
-  display: flex;
-  flex-direction: column;
-  align-items: space-between;
-  gap: 20px;
+.custum-file-upload i {
   cursor: pointer;
-  align-items: center;
-  justify-content: center;
- 
-  background-color: rgba(255, 255, 255, 1);
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
-}
+  font-size: 1.5rem;
 
-.custum-file-upload .icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-
-.custum-file-upload .icon svg {
-  height: 80px;
-  fill: rgba(75, 85, 99, 1);
+.postText {
+  background: transparent !important;
+  border: none !important;
+  
 }
-
-.custum-file-upload .text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.postText:focus {
+  outline: none !important;
 }
-
-.custum-file-upload .text span {
-  font-weight: 400;
-  color: rgba(75, 85, 99, 1);
-}
-
-.custum-file-upload input {
-  display: none;
+.form-control:focus {
+  color: #ccc;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 .postingBtn {
@@ -283,36 +262,7 @@ strong {
   border:  solid #e1e1e1 1px;
 }
 
-@media (max-width: 768px) {
 
-  .custum-file-upload {
-    height: 70px;
-    width: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: space-between;
-    gap: 5px;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    margin-left: 1.3rem;
-    background-color: rgba(255, 255, 255, 1);
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
-  }
-  .custum-file-upload .icon {
-    width: 40px;
-   
-  }
-  .custum-file-upload .text {
-    font-size: 0.6rem;
-    padding-bottom: 1.3rem;
-    display: none;
-    
-  }
-
-}
 
 #loader {
   position: absolute;
@@ -520,7 +470,25 @@ strong {
   cursor: pointer;
 }
 
-.fa-arrow-left {
-  font-size: 1.2rem;
-  padding: 0 0 0 0.2rem;
+nav {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: #212529;
+  width: 100vw;
+}
+.postContainer {
+  
+  background: #212529;
+  padding: 15px;
+  padding-top: 100px;
+}
+#offcanvasRight {
+  background: #212529;
+}
+
+.logout {
+  margin-right: 50px !important;
 }
