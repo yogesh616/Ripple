@@ -32,7 +32,7 @@ function Login() {
 
 async function login() {
     try {
-        const res = await signInWithEmailAndPassword(auth, 'test@gmail.com', 'testuser')
+        const res = await signInWithEmailAndPassword(auth, email, password)
         if (res) {
            
             navigate('/profile')
