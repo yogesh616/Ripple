@@ -393,7 +393,7 @@ return formattedDate;
             <h2 className='fs-3' style={{color: '#e1e1e1'}}>Ripple</h2>
             <img src={logo} alt="Logo" style={{marginTop: '24px'}} />
            <div className='dropdown'>
-            <span><img src={user.photoURL} alt="" style={{animation: 'none', width: '50px', height: '50px', borderRadius: '50%', marginTop: '24px'}} /></span>
+            <span><img src={user.photoURL || avatar} alt="" style={{animation: 'none', width: '50px', height: '50px', borderRadius: '50%', marginTop: '24px'}} /></span>
             
            </div>
            
