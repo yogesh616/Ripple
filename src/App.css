@@ -287,14 +287,10 @@ button img {
 
 /*  like css*/
 /* From Uiverse.io by andrew-demchenk0 */ 
-.container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
+
+  input[type="checkbox"] {
+    display: none;
   }
-  
   .container-like {
     display: block;
     position: relative;
@@ -326,3 +322,65 @@ button img {
     fill: #2196F3;
     fill: #666;
   }
+
+  @media (max-width: 768px) {
+    .gglBtn {
+      display: flex;
+
+    }
+    .gglBtn img {
+      margin-right: 5px;
+      margin-top: 2px;
+    }
+  }
+
+  @media (min-width: 1023px) {
+    .gglBtn {
+      display: flex;
+
+    }
+    .gglBtn img {
+      margin-right: 5px;
+      margin-top: 2px;
+    }
+  }
+
+  .cmtDiv {
+    margin: 0 38px;
+  }
+
+/* In your profile.css or comment.css */
+
+.reply-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  text-align: center;
+  max-width: 400px;
+  gap: 0.5rem;
+}
+.reply-form input {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+ .reply-form input:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+ }
+
+.reply-form button {
+  width: 40%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+}
+
+

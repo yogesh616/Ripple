@@ -32,7 +32,7 @@ function Login() {
 
 async function login() {
     try {
-        const res = await signInWithEmailAndPassword(auth, email, password)
+        const res = await signInWithEmailAndPassword(auth, 'test@gmail.com', 'testuser')
         if (res) {
            
             navigate('/profile')
@@ -86,10 +86,10 @@ async function login() {
          <p>We are happy to have you back.</p>
          </div> 
          <div className='formPage py-3'>
-           <input type="text" className="my-3" placeholder="Try test@gmail.com for testing" value={email} onChange={(e)=> setEmail(e.target.value)} aria-describedby="addon-wrapping" />
-           <input type="password" className="my-3" placeholder="testuser" value={password} onChange={(e)=> setPassword(e.target.value)} aria-describedby="addon-wrapping" />
-          <button className='btn btn-primary w-100' style={{background: '#59DCE1'}} onClick={login}>Login</button>
-           <button type="button" onClick={signinwithgoogle}  className="btn w-100 text-dark my-3" style={{background: '#dddfe0'}}><img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="" /> Signin with Google</button>
+           <input style={{opacity: '1'}} type="text" className="my-3" placeholder="Try test@gmail.com for testing" value={email} onChange={(e)=> setEmail(e.target.value)} aria-describedby="addon-wrapping" />
+           <input style={{opacity: '1'}} type="password" className="my-3" placeholder="testuser" value={password} onChange={(e)=> setPassword(e.target.value)} aria-describedby="addon-wrapping" />
+          <button className='btn btn-primary w-100' style={{background: '#59DCE1'}} onClick={login}>Tester Login</button>
+           <button type="button" onClick={signinwithgoogle}  className="btn w-100 text-dark my-3 gglBtn" style={{background: '#dddfe0'}}><img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="" /> Sign in with Google</button>
          </div>
          <div className='bottomText '>Don't have an account <Link to='/signup' style={LinkStyle}>Signup</Link></div>
       </div>

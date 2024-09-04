@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+.post-main {
+    display: flex;
+    justify-content: center;
+   
+}
+.post-creation-container {
+    background-color: #403d3d;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.user-info img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.user-info h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #e1e1e1;
+}
+
+.post-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    background: transparent;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.actions .icons {
+    display: flex;
+    gap: 10px;
+}
+
+.actions .icons label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: #c7c3c3;
+}
+
+.actions .icons input[type="file"] {
+    display: none;
+}
+
+.actions .post-btn {
+    background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 10px;
+}
+
+.actions .post-btn i {
+    color: #242424;
+}
+
+.actions .post-btn:disabled {
+    background-color: #99d6f2;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .post-creation-container {
+        padding: 15px;
+    }
+
+    .user-info img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .post-input {
+        font-size: 13px;
+    }
+
+    .actions .post-btn {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+}

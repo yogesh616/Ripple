@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post - Threads Style</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .post-creation-container {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-info img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .user-info h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .post-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .actions .icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions .icons label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .actions .icons input[type="file"] {
+            display: none;
+        }
+
+        .actions .post-btn {
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 10px;
+        }
+
+        .actions .post-btn:disabled {
+            background-color: #99d6f2;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 600px) {
+            .post-creation-container {
+                padding: 15px;
+            }
+
+            .user-info img {
+                width: 35px;
+                height: 35px;
+            }
+
+            .post-input {
+                font-size: 13px;
+            }
+
+            .actions .post-btn {
+                padding: 8px 15px;
+                font-size: 13px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    <div class="post-creation-container">
+        <div class="user-info">
+            <img src="https://lh3.googleusercontent.com/a/ACg8ocJojFzJ5iALPJYIdN9BjXowxNO3fLFL2qPXm3MtAOWSlT0ErtmW=s96-c" alt="User Profile Picture" />
+            <h4>Yogesh Saini</h4>
+        </div>
+        <textarea class="post-input" placeholder="What's on your mind?" rows="4"></textarea>
+        <div class="actions">
+            <div class="icons">
+                <label for="image-upload">
+                    <i class="fa-regular fa-image"></i>
+                </label>
+                <input type="file" id="image-upload" accept="image/*" />
+              
+            </div>
+            <button class="post-btn" disabled>Post</button>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    </body>
+</html>

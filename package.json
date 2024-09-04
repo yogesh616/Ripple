@@ -25,7 +25,8 @@
     "react-h5-audio-player": "^3.9.3",
     "react-router-dom": "^6.23.1",
     "react-tiny-popover": "^8.0.4",
-    "react-toastify": "^10.0.5"
+    "react-toastify": "^10.0.5",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

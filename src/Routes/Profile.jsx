@@ -4,6 +4,7 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { Navigate, useNavigate } from 'react-router';
 import logo from '../assets/logo.png';
 import avatar from '../assets/user.png';
+import './post.css'
 import './profile.css';
 import '../index.css'
 import './pageLoader.css'
@@ -18,11 +19,10 @@ import EmojiPicker from 'emoji-picker-react';
 import { ToastContainer, toast, Flip } from 'react-toastify';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebase';
-
+import { v4 as uuidv4 } from 'uuid';
 import { Link } from 'react-router-dom';
 import social from '../assets/social.png';
 import { bottom } from '@popperjs/core';
-
 
 
 
@@ -51,8 +51,37 @@ function Profile() {
     const [fullSize, setFullSize] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [audioPlayer, setAudioPlayer] = useState(null);
-   
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [selectedCommentId, setSelectedCommentId] = useState(null);
+    const [replyText, setReplyText] = useState('');
+
+    const generateUniqueId = () => uuidv4();
+    const handleReplyChange = (e) => {
+        setReplyText(e.target.value);
+    };
+    const handleCommentClick = (commentId) => {
+        if (commentId) {
+            setSelectedCommentId(commentId);
+        console.log(commentId);
+        }
+    };
     
+
+    const handleReplySubmit = (postId, commentUid) => {
+        if (replyText.trim() === '') {
+            return; // Optionally show a message if the reply text is empty
+        }
+        handleReply(postId, commentUid, replyText); // Assuming handleReply function is properly defined
+        setReplyText(''); // Clear reply text after submission
+        setSelectedCommentId(null); // Deselect comment after reply
+    };
+    
+
+    const onEmojiClick = (event, emojiObject) => {
+        setComment(prevComment => prevComment + emojiObject.emoji);
+        setShowEmojiPicker(false);
+    };
+
     const seeFullSize = (src)=> {
         setFullSize(src)
     };
@@ -161,7 +190,7 @@ function Profile() {
             const timestamp = serverTimestamp();
             const postRef = await addDoc(collection(db, 'posts'), {
                 uid: user.uid,
-                displayName: user.displayName,
+                displayName: user.displayName || 'Tester',
                 photoURL: user.photoURL,
                 timestamp: timestamp,
                 text: text,
@@ -223,33 +252,94 @@ function Profile() {
             const postRef = doc(db, 'posts', postId);
             await updateDoc(postRef, {
                 likesCount: increment(1),
-                likedBy: arrayUnion({ uid: user.uid, name: user.displayName, photo: user.photoURL }) // add user ID to likedBy array
+                likedBy: arrayUnion({ uid: user.uid, name: user.displayName || user.email, photo: user.photoURL || avatar }) // add user ID to likedBy array
             });
         } catch (error) {
             console.log('Error updating likes count:', error);
         }
     };
     
+// Submit a new comment
+const handleComment = async (postId) => {
+    if (!comment) {
+        return;
+    }
 
-    const handleComment = async (postId) => {
-        if (!comment) {
-          
-            return;
-        }
+    try {
+        const postRef = doc(db, 'posts', postId);
+        await updateDoc(postRef, {
+            commentsCount: increment(1),
+            comments: arrayUnion({
+                commentId: generateUniqueId(), // Generate unique ID for the comment
+                uid: user.uid,
+                name: user.displayName || user.email,
+                photo: user.photoURL || avatar,
+                comment: comment,
+                replies: []
+            })
+        });
+        setComment(''); // Clear the comment input field after submission
+    } catch (error) {
+        console.log('Error updating comments count:', error);
+    }
+};
 
-        try {
-            const postRef = doc(db, 'posts', postId);
-            await updateDoc(postRef, {
-                commentsCount: increment(1),
-                comments: arrayUnion({ uid: user.uid, name: user.displayName, photo: user.photoURL, comment: comment })
+// Submit a reply to a comment
+const handleReply = async (postId, commentId, replyText) => {
+    if (!replyText) {
+        console.log('Reply text is empty');
+        return;
+    }
+
+    if (!user) {
+        console.log('User is not authenticated');
+        return;
+    }
+
+    try {
+        const postRef = doc(db, 'posts', postId);
+        const postSnapshot = await getDoc(postRef);
+
+        if (postSnapshot.exists()) {
+            const post = postSnapshot.data();
+            
+            // Get the current server timestamp
+            const timestamp = new Date();
+
+            // Update the comments
+            const updatedComments = post.comments.map(comment => {
+                if (comment.commentId === commentId) {
+                    // Ensure replies is an array
+                    const replies = Array.isArray(comment.replies) ? comment.replies : [];
+                    return {
+                        ...comment,
+                        replies: [
+                            ...replies,
+                            {
+                                replyId: generateUniqueId(), // Generate unique ID for the reply
+                                uid: user.uid,
+                                name: user.displayName || user.email,
+                                photo: user.photoURL || avatar,
+                                reply: replyText,
+                                timestamp: timestamp
+                            }
+                        ]
+                    };
+                }
+                return comment;
             });
-            setComment(''); // Clear the comment input field after submission
-           
-        } catch (error) {
-            console.log('Error updating comments count:', error);
-        }
-    };
 
+            await updateDoc(postRef, { comments: updatedComments });
+            console.log('Reply added successfully');
+            setSelectedCommentId(null);
+        } else {
+            console.log('Post not found!');
+        }
+    } catch (error) {
+        console.error('Error adding reply:', error);
+    }
+};
+    
     
 
 
@@ -393,7 +483,7 @@ return formattedDate;
             <h2 className='fs-3' style={{color: '#e1e1e1'}}>Ripple</h2>
             <img src={logo} alt="Logo" style={{marginTop: '24px'}} />
            <div className='dropdown'>
-            <span><img src={user.photoURL} alt="" style={{animation: 'none', width: '50px', height: '50px', borderRadius: '50%', marginTop: '24px'}} /></span>
+            <span><img src={user.photoURL || avatar} alt="" style={{animation: 'none', width: '50px', height: '50px', borderRadius: '50%', marginTop: '24px'}} /></span>
             
            </div>
            
@@ -413,7 +503,7 @@ return formattedDate;
             <div className="offcanvas-header mb-3">
             <div className='d-flex align-items-center justify-content-between flex-wrap w-100 mt-5'>
   <h5 className="offcanvas-title mb-2 mb-md-0" id="offcanvasRightLabel">
-    &nbsp; {user.displayName}    
+    &nbsp; {user.displayName || user.email}    
   </h5>
  {/* <img src={user.photoURL} alt="" className="img-fluid" style={{ maxWidth: '50px', borderRadius: '50%' }} /> */}
 </div>
@@ -540,8 +630,8 @@ return formattedDate;
                 <h5 className="offcanvas-title" id="offcanvasTopLabel">New Ripple</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div className="offcanvas-body container-fluid">
-                <div className="post">
+            <div className="offcanvas-body container-fluid post-main">
+               { /*<div className="post">
                     <div><img src={user.photoURL} alt={user.displayName} style={{height:'50px', width: '50px'}} className="rounded-circle" loading='lazy' /></div>
                     <h5>{user.displayName}</h5>
                     <div className="body d-flex align-items-center ">
@@ -571,6 +661,49 @@ return formattedDate;
 
                     )}
                 </div>
+*/ }
+
+{ /* chatgpt generated post creation ui */}
+
+<div className="post-creation-container">
+            <div className="user-info">
+                <img src={user.photoURL} alt={user.displayName} style={{ height: '50px', width: '50px' }} className="rounded-circle" loading="lazy" />
+                <h4>{user.displayName}</h4>
+            </div>
+
+            <textarea
+                className="post-input"
+                placeholder="What's on your mind?"
+                rows="4"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+            />
+
+            <div className="actions">
+                <div className="icons">
+                    <label htmlFor="image-upload">
+                        <i className="fa-regular fa-image"></i>
+                    </label>
+                    <input
+                        style={{ opacity: '0', position: 'absolute', zIndex: '-1' }}
+                        type="file"
+                        id="image-upload"
+                        onChange={handleFileChange}
+                    />
+                </div>
+
+                <button
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                    onClick={() => createPost(text, file)}
+                    className="post-btn"
+                    disabled={!text && !file}
+                >
+                    <i className="fa-regular fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
             </div>
         </div>
 
@@ -583,14 +716,14 @@ return formattedDate;
                      <div key={index} className="postField text-gray-400 border-1 border-t border-x flex justify-start gap-1 mb-3 md:mb-4 rounded-tr-xl rounded-tl-xl px-3 md:px-4 py-[.85rem] relative">
                      <div className="pt-[5px] mr-2 flex flex-col justify-between items-center">
                        <a
-                         title={`View Profile of ${post.displayName}`}
+                         title={`View Profile of ${post.displayName  }`}
                          
                        >
                          <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                            <img
                              className="aspect-square h-full w-full"
                              referrerPolicy="no-referrer"
-                             alt={`Profile Image of ${post.displayName}`}
+                             alt={`Profile Image of ${post.displayName }`}
                              src={post.photoURL || avatar}
                             
                            />
@@ -603,7 +736,7 @@ return formattedDate;
                            className="flex flex-wrap items-center text-xs mr-2 py-1 __className_e27b8e"
                           
                          >
-                           <p className="font-bold mr-1">{post.displayName}</p>
+                           <p className="font-bold mr-1">{post.displayName || 'Tester'}</p>
                          </a>
                        </div>
                        <a>
@@ -648,31 +781,61 @@ return formattedDate;
     <h5 className="offcanvas-title" id="offcanvasBottomLabel">Comments</h5>
     <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div className="offcanvas-body small ">
+  <div  className="offcanvas-body small ">
     { /* Comments List */}
     <div className=' overflow-y-auto' style={{marginTop: '-32px', height: '85%'}}>
     {
     post?.comments?.length > 0 ? (
         post.comments.map((comment, index) => (
-            <ol key={index} className='overflow-y-auto' >
-               <li>
-               <div className="comment">
-		<div className="user-banner">
-			<div className="user">
-				<div className="avatar">
-					<img src={comment.photo} />
-					
-				</div>
-				<h5>{comment.name}</h5>
-			</div>
-			<button className="btncmt dropdown"><i className="ri-more-line"></i></button>
-		</div>
-		<div className="content">
-			<p>{comment.comment}</p>
-		</div>
-		
-	</div>
-               </li>
+            <ol key={index} className='overflow-y-auto'>
+                <li  >
+                    <div className="comment">
+                        <div className="user-banner">
+                            <div className="user">
+                                <div className="avatar">
+                                    <img src={comment.photo} alt={comment.name} />
+                                </div>
+                                <h5>{comment.name}</h5>
+                            </div>
+                            <button className="btncmt dropdown"><i className="ri-more-line"></i></button>
+                        </div>
+                        <div className="content cmtDiv">
+                            <p style={{cursor: 'pointer'}} onClick={() => handleCommentClick(comment.commentId)}>{comment.comment}</p>
+                            {comment.replies && comment.replies.map((reply, idx) => (
+                                <div key={idx} className="ps-4">
+                                    <div className="d-flex align-items-center">
+                                        <img
+                                            className="rounded-circle"
+                                            src={reply.photo}
+                                            alt={reply.name}
+                                            style={{ width: '25px', height: '25px', marginRight: '5px' }}
+                                        />
+                                        <strong style={{color: '#585757'}}>{reply.name}</strong>
+                                        <span className="text-muted ms-2">{convertTimestamp(reply.timestamp)}</span>
+                                    </div>
+                                    <p style={{marginTop: '5px'}}>{reply.reply}</p>
+                                </div>
+                            ))}
+                            {selectedCommentId === comment.commentId && (
+                                <div className="reply-form mt-2">
+                                    <input
+                                        value={replyText}
+                                        onChange={handleReplyChange}
+                                        placeholder="Add a reply..."
+                                        className="reply-input"
+                                        style={{color: '#585757'}}
+                                    />
+                                    <button
+                                        onClick={() => handleReplySubmit(post.id, comment.commentId)}
+                                        className="reply-button"
+                                    >
+                                        Reply
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </li>
             </ol>
         ))
     ) : (
@@ -681,10 +844,16 @@ return formattedDate;
 }
 </div>
  
-  <div className="" style={{position: 'absolute', bottom: '10px', width: '92%', zIndex: '3', background: '#212529'}}>
+  <div onClick={() => setSelectedCommentId(null)} className="" style={{position: 'absolute', bottom: '10px', width: '92%', zIndex: '3', background: '#212529'}}>
    <div className="input-group mb-3 text-center" >
+   <span  style={{borderRadius: ' 25px 0 0 25px ', background: 'transparent', color: '#e1e1e1', cursor: 'pointer', border: 'solid 1px #393737'}} className="input-group-text" id="basic-addon1"><i className=" text-warning fa-regular fa-face-smile"></i></span>
+  
   <input value={comment} onChange={(e) => setComment(e.target.value)} type="text" className="form-control" style={{ color: '#e1e1e1', background: 'transparent', opacity: '1'}} placeholder="Add a comment..." aria-label="Username" aria-describedby="basic-addon1"  />
-  <span onClick={() => handleComment(post.id)} style={{borderRadius: '0 25px 25px 0', background: 'transparent', color: '#e1e1e1', cursor: 'pointer', border: 'solid 1px #393737'}} className="input-group-text" id="basic-addon1">@</span>
+  <span onClick={() => handleComment(post.id)} style={{borderRadius: '0 25px 25px 0', background: 'transparent', color: '#e1e1e1', cursor: 'pointer', border: 'solid 1px #393737'}} className="input-group-text" id="basic-addon1"><i className="fa-regular fa-paper-plane"></i></span>
+  {/* Emojies*/}
+ 
+ 
+
 </div>
       
     </div>
