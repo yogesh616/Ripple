@@ -323,6 +323,11 @@ button img {
     fill: #666;
   }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 0379fced89ee2b0f8cfb43bdba22eb59b4f455bd
   @media (max-width: 768px) {
     .gglBtn {
       display: flex;
@@ -344,6 +349,7 @@ button img {
       margin-top: 2px;
     }
   }
+<<<<<<< HEAD
 
   .cmtDiv {
     margin: 0 38px;
@@ -384,3 +390,5 @@ button img {
 }
 
 
+=======
+>>>>>>> 0379fced89ee2b0f8cfb43bdba22eb59b4f455bd
